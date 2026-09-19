@@ -1,18 +1,6 @@
-export const keyMap: Record<string, string> = {
-  //white keys
-  a: "C4",
-  s: "D4",
-  d: "E4",
-  f: "F4",
-  g: "G4",
-  h: "A4",
-  j: "B4",
-  k: "C5",
+import { pianoKeys } from "./pianoLayout";
 
-  //black keys
-  w: "C#4",
-  e: "D#4",
-  t: "F#4",
-  y: "G#4",
-  u: "A#4",
-};
+// Härleds ur pianoKeys så att bokstav, ton och ljudfil inte kan glida isär.
+export const keyMap: Record<string, string> = Object.fromEntries(
+  pianoKeys.map((key) => [key.letter, key.note])
+);

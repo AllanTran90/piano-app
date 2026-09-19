@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { keyMap } from "./keyMap";
-import { pianoKeys } from "./pianoLayout";
+import { keyboardHeight, keyboardWidth, positionedKeys } from "./pianoLayout";
 import PianoKey from "./PianoKey";
 
 function App() {
@@ -34,11 +34,18 @@ function App() {
   return (
     <div>
       <h1>Piano-app</h1>
-      <div style={{ display: "flex", gap: "4px" }}>
-        {pianoKeys.map((key) => (
+      <div
+        style={{
+          position: "relative",
+          width: keyboardWidth,
+          height: keyboardHeight,
+          margin: "0 auto",
+        }}
+      >
+        {positionedKeys.map((key) => (
           <PianoKey
             key={key.letter}
-            letter={key.letter}
+            data={key}
             isActive={activeKey === key.letter}
           />
         ))}
