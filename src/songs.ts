@@ -36,6 +36,8 @@ export type Song = {
   id: string;
   title: string;
   origin: string;
+  // Set when the song is only part of the piece, e.g. "inledningen".
+  excerpt?: string;
   difficulty: Difficulty;
   lines: Step[][]; // for display: one array per phrase
   steps: Step[]; // the same steps, flattened in playing order
@@ -133,6 +135,10 @@ const SONG_SOURCES: SongSource[] = [
     origin: "James Lord Pierpont",
     difficulty: "easy",
     notation: `
+      G3 E4 D4 C4 G3 | G3 G3 G3 E4 D4 C4 A3 |
+      A3 F4 E4 D4 B3 | G4 G4 F4 D4 E4 |
+      G3 E4 D4 C4 G3 | G3 E4 D4 C4 A3 |
+      A3 A3 F4 E4 D4 G4 G4 G4 G4 A4 G4 F4 D4 C4 |
       E4 E4 E4 | E4 E4 E4 | E4 G4 C4 D4 E4 |
       F4 F4 F4 F4 F4 E4 E4 E4 E4 E4 D4 D4 E4 D4 G4 |
       E4 E4 E4 | E4 E4 E4 | E4 G4 C4 D4 E4 |
@@ -185,6 +191,8 @@ const SONG_SOURCES: SongSource[] = [
     notation: `
       C4 D4 E4 G4 G4 A4 G4 E4 C4 D4 E4 E4 D4 C4 D4 |
       C4 D4 E4 G4 G4 A4 G4 E4 C4 D4 E4 E4 D4 D4 C4 |
+      C4 D4 E4 G4 G4 A4 G4 E4 C4 D4 E4 E4 D4 C4 D4 |
+      C4 D4 E4 G4 G4 A4 G4 E4 C4 D4 E4 E4 D4 D4 C4 |
       F4 F4 A4 A4 A4 G4 G4 E4 C4 D4 |
       C4 D4 E4 G4 G4 A4 G4 E4 C4 D4 E4 E4 D4 D4 C4`,
   },
@@ -193,7 +201,8 @@ const SONG_SOURCES: SongSource[] = [
   {
     id: "fur-elise",
     title: "Für Elise",
-    origin: "Ludwig van Beethoven (inledningen)",
+    origin: "Ludwig van Beethoven",
+    excerpt: "inledningen",
     difficulty: "hard",
     notation: `
       E4 D#4 E4 D#4 E4 B3 D4 C4 A3 | C3 E3 A3 B3 | E3 G#3 B3 C4 |
@@ -203,17 +212,21 @@ const SONG_SOURCES: SongSource[] = [
     id: "minuet-in-g",
     title: "Menuett i G-dur",
     origin: "Christian Petzold (förr tillskriven Bach)",
+    excerpt: "första delen och halva andra",
     difficulty: "hard",
     notation: `
       D4 G3 A3 B3 C4 D4 G3 G3 | E4 C4 D4 E4 F#4 G4 G3 G3 |
       C4 D4 C4 B3 A3 B3 C4 B3 A3 G3 | F#3 G3 A3 B3 G3 B3 A3 |
       D4 G3 A3 B3 C4 D4 G3 G3 | E4 C4 D4 E4 F#4 G4 G3 G3 |
-      C4 D4 C4 B3 A3 B3 C4 B3 A3 G3 | A3 B3 A3 G3 F#3 G3`,
+      C4 D4 C4 B3 A3 B3 C4 B3 A3 G3 | A3 B3 A3 G3 F#3 G3 |
+      B4 G4 A4 B4 G4 | A4 D4 E4 F#4 D4 | G4 E4 F#4 G4 D4 | C#4 B3 C#4 A3 |
+      A3 B3 C#4 D4 E4 F#4 | G4 F#4 E4 | F#4 A3 C#4 | D4`,
   },
   {
     id: "canon-in-d",
     title: "Kanon i D-dur",
     origin: "Johann Pachelbel",
+    excerpt: "de första takterna",
     difficulty: "hard",
     notation: `
       F#4 E4 D4 C#4 B3 A3 B3 C#4 | D4 C#4 B3 A3 G3 F#3 G3 E3 |
@@ -223,6 +236,7 @@ const SONG_SOURCES: SongSource[] = [
     id: "entertainer",
     title: "The Entertainer",
     origin: "Scott Joplin",
+    excerpt: "huvudtemat",
     difficulty: "hard",
     notation: `
       D3 D#3 E3 C4 E3 C4 E3 C4 | C4 D4 D#4 E4 C4 D4 E4 B3 D4 C4 |
@@ -233,6 +247,7 @@ const SONG_SOURCES: SongSource[] = [
     id: "mountain-king",
     title: "I Bergakungens sal",
     origin: "Edvard Grieg",
+    excerpt: "huvudtemat",
     difficulty: "hard",
     notation: `
       A3 B3 C4 D4 E4 C4 E4 | D#4 B3 D#4 | D4 A#3 D4 |
@@ -245,7 +260,8 @@ const SONG_SOURCES: SongSource[] = [
   {
     id: "bumblebee",
     title: "Humlans flykt",
-    origin: "Nikolaj Rimskij-Korsakov (inledningen, i två oktaver)",
+    origin: "Nikolaj Rimskij-Korsakov",
+    excerpt: "inledningen, spelad i två oktaver",
     difficulty: "boss",
     notation: `
       E4 D#4 D4 C#4 C4 F4 E4 D#4 | E4 D#4 D4 C#4 C4 C#4 D4 D#4 |
@@ -256,7 +272,8 @@ const SONG_SOURCES: SongSource[] = [
   {
     id: "rondo-alla-turca",
     title: "Rondo alla turca",
-    origin: "Wolfgang Amadeus Mozart (inledningen)",
+    origin: "Wolfgang Amadeus Mozart",
+    excerpt: "inledningen",
     difficulty: "boss",
     notation: `
       B3 A3 G#3 A3 C4 | D4 C4 B3 C4 E4 |
@@ -268,7 +285,8 @@ const SONG_SOURCES: SongSource[] = [
   {
     id: "toccata",
     title: "Toccata och fuga i d-moll",
-    origin: "Johann Sebastian Bach (inledningen)",
+    origin: "Johann Sebastian Bach",
+    excerpt: "inledningen",
     difficulty: "boss",
     notation: `
       A4 G4 A4 | G4 F4 E4 D4 C#4 D4 |

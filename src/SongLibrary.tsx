@@ -40,9 +40,14 @@ function SongLibrary({ selectedId, onSelect }: SongLibraryProps) {
                 aria-pressed={song.id === selectedId}
                 onClick={() => onSelect(song)}
               >
-                <span className="song-title">{song.title}</span>
+                <span className="song-title">
+                  {song.title}
+                  {song.excerpt && <span className="excerpt-badge">Utdrag</span>}
+                </span>
                 <span className="song-meta">
-                  {song.origin} · {song.steps.length} steg
+                  {song.origin}
+                  {song.excerpt && ` · ${song.excerpt}`} · {song.steps.length}{" "}
+                  steg
                 </span>
               </button>
             </li>

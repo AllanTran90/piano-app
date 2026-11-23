@@ -30,8 +30,14 @@ function SongPractice({ state, onRestart, onClose }: SongPracticeProps) {
     <section className="practice">
       <div className="practice-header">
         <div>
-          <h2>{song.title}</h2>
-          <p className="song-meta">{song.origin}</p>
+          <h2>
+            {song.title}
+            {song.excerpt && <span className="excerpt-badge">Utdrag</span>}
+          </h2>
+          <p className="song-meta">
+            {song.origin}
+            {song.excerpt && ` · ${song.excerpt}`}
+          </p>
         </div>
         <div className="practice-actions">
           <button onClick={onRestart}>Börja om</button>
