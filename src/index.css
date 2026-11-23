@@ -2,6 +2,11 @@
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
+  --surface: #f6f5f9;
+  --border: #e5e4e7;
+  --accent: #7f77dd;
+  --hint: #ffd166;
+  --boss: #d94848;
 
   font: 18px/145% system-ui, "Segoe UI", Roboto, sans-serif;
   color-scheme: light dark;
@@ -16,6 +21,10 @@
     --text: #9ca3af;
     --text-h: #f3f4f6;
     --bg: #16171d;
+    --surface: #1f2028;
+    --border: #2e303a;
+    --accent: #9d96ec;
+    --boss: #f06a6a;
   }
 }
 
@@ -41,4 +50,173 @@ h1 {
     font-size: 36px;
     margin: 20px 0;
   }
+}
+
+h2 {
+  font-weight: 500;
+  font-size: 24px;
+  color: var(--text-h);
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  font-size: 15px;
+  color: var(--text-h);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 14px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--accent);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.song-meta {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ---------- Song practice ---------- */
+
+.practice {
+  max-width: 720px;
+  margin: 32px auto 0;
+  padding: 20px;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.practice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.practice-actions {
+  display: flex;
+  gap: 8px;
+
+  button {
+    background: var(--bg);
+  }
+}
+
+.practice-status,
+.practice-result {
+  font-size: 15px;
+  margin: 12px 0 16px;
+}
+
+.practice-result {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.song-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+
+.song-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.song-step {
+  min-width: 1.6em;
+  padding: 2px 6px;
+  border-radius: 6px;
+  text-align: center;
+  color: var(--text-h);
+  background: var(--bg);
+  border: 1px solid var(--border);
+
+  &.done {
+    opacity: 0.35;
+  }
+  &.current {
+    background: var(--hint);
+    border-color: var(--hint);
+    color: #333;
+    font-weight: 700;
+  }
+}
+
+/* ---------- Song library ---------- */
+
+.library {
+  max-width: 720px;
+  margin: 32px auto 48px;
+  text-align: left;
+}
+
+.level-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+
+.level-tab[aria-selected="true"] {
+  color: white;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.level-tab.level-boss {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+
+  &[aria-selected="true"] {
+    background: var(--boss);
+    border-color: var(--boss);
+  }
+}
+
+.level-description {
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+
+.song-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.song-button {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 10px 14px;
+  text-align: left;
+
+  &[aria-pressed="true"] {
+    border-color: var(--accent);
+    box-shadow: inset 4px 0 0 var(--accent);
+  }
+}
+
+.song-title {
+  font-size: 17px;
+  font-weight: 600;
 }

@@ -16,17 +16,38 @@ const KEY_LOOK: Record<
 
 const ACTIVE_BACKGROUND = "#7f77dd";
 const ACTIVE_COLOR = "white";
+// The "play this next" hint in song practice.
+const HINT_BACKGROUND = "#ffd166";
+const HINT_COLOR = "#333";
 
 type PianoKeyProps = {
   data: PositionedKey;
   isActive: boolean;
+  isHint: boolean;
   onPress: (key: PianoKeyData) => void;
   onRelease: (key: PianoKeyData) => void;
 };
 
-function PianoKey({ data, isActive, onPress, onRelease }: PianoKeyProps) {
+function PianoKey({
+  data,
+  isActive,
+  isHint,
+  onPress,
+  onRelease,
+}: PianoKeyProps) {
   const { width, height } = KEY_SIZE[data.type];
   const look = KEY_LOOK[data.type];
+
+  // Pressed wins over hint, so you see your own press land.
+  let background = look.background;
+  let color = look.color;
+  if (isActive) {
+    background = ACTIVE_BACKGROUND;
+    color = ACTIVE_COLOR;
+  } else if (isHint) {
+    background = HINT_BACKGROUND;
+    color = HINT_COLOR;
+  }
 
   return (
     <div
@@ -49,8 +70,8 @@ function PianoKey({ data, isActive, onPress, onRelease }: PianoKeyProps) {
         alignItems: "flex-end",
         justifyContent: "center",
         paddingBottom: "8px",
-        backgroundColor: isActive ? ACTIVE_BACKGROUND : look.background,
-        color: isActive ? ACTIVE_COLOR : look.color,
+        backgroundColor: background,
+        color,
         fontSize: "14px",
         textTransform: "uppercase",
         cursor: "pointer",
