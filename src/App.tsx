@@ -1,38 +1,79 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { startNote, preloadNotes } from "./audio";
 import { keyMap } from "./keyMap";
-import { keyboardHeight, keyboardWidth, positionedKeys } from "./pianoLayout";
+import {
+  keyboardHeight,
+  keyboardWidth,
+  pianoKeys,
+  positionedKeys,
+  type PianoKeyData,
+} from "./pianoLayout";
 import PianoKey from "./PianoKey";
 
 function App() {
-  const [activeKey, setActiveKey] = useState<string | null>(null);
+  // A Set holds every currently pressed key, so several keys can be
+  // highlighted at once.
+  const [activeKeys, setActiveKeys] = useState<Set<string>>(new Set());
+  // The stop function for each sounding note, by key letter.
+  const stopFunctions = useRef<Map<string, () => void>>(new Map());
+
+  useEffect(() => {
+    void preloadNotes(pianoKeys.map((key) => key.note));
+  }, []);
+
+  const press = useCallback((key: PianoKeyData) => {
+    if (stopFunctions.current.has(key.letter)) return; // already sounding
+    stopFunctions.current.set(key.letter, startNote(key.note));
+    // Create a new Set rather than mutating the old one, so React notices.
+    setActiveKeys((prev) => new Set(prev).add(key.letter));
+  }, []);
+
+  const release = useCallback((key: PianoKeyData) => {
+    const stop = stopFunctions.current.get(key.letter);
+    if (!stop) return;
+    stop();
+    stopFunctions.current.delete(key.letter);
+    setActiveKeys((prev) => {
+      const next = new Set(prev);
+      next.delete(key.letter);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      const note = keyMap[e.key];
-      if (note) {
-        setActiveKey(e.key);
-        const audio = new Audio(`/sounds/${note}.mp3`);
-        audio.play();
-      }
+      const key = keyMap[e.code];
+      if (!key || e.repeat) return;
+      // Leave shortcuts like Cmd+C or Ctrl+R to the browser.
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      press(key);
     }
 
     function handleKeyUp(e: KeyboardEvent) {
-      if (keyMap[e.key]) {
-        setActiveKey(null);
-      }
+      const key = keyMap[e.code];
+      if (key) release(key);
+    }
+
+    // If the window loses focus (e.g. Cmd+Tab) while a key is held, its
+    // keyup never arrives - so release everything to avoid stuck notes.
+    function handleBlur() {
+      pianoKeys.forEach(release);
     }
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener("blur", handleBlur);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("blur", handleBlur);
+      handleBlur();
     };
-  }, []);
+  }, [press, release]);
 
   return (
-    <div>
+    <main>
       <h1>Piano-app</h1>
       <div
         style={{
@@ -46,11 +87,13 @@ function App() {
           <PianoKey
             key={key.letter}
             data={key}
-            isActive={activeKey === key.letter}
+            isActive={activeKeys.has(key.letter)}
+            onPress={press}
+            onRelease={release}
           />
         ))}
       </div>
-    </div>
+    </main>
   );
 }
 

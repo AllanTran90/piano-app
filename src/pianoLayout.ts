@@ -13,9 +13,24 @@ export const KEY_SIZE: Record<KeyType, { width: number; height: number }> = {
 
 export const KEY_GAP = 4;
 
-// Tangenterna i spelordning, så en svart tangent ligger mellan sina två vita.
-// Detta är enda stället som vet vilken bokstav som hör till vilken ton.
+// The keys in playing order (low to high), so each black key sits between
+// its two white neighbours. This is the only place that knows which letter
+// plays which note.
+// The bottom keyboard row (z x c v b n m, s d g h j) plays the octave below
+// the top row (q w e r t y u i, 2 3 5 6 7) - same pattern, one octave down.
 export const pianoKeys: PianoKeyData[] = [
+  { letter: "z", note: "C3", type: "white" },
+  { letter: "s", note: "Db3", type: "black" },
+  { letter: "x", note: "D3", type: "white" },
+  { letter: "d", note: "Eb3", type: "black" },
+  { letter: "c", note: "E3", type: "white" },
+  { letter: "v", note: "F3", type: "white" },
+  { letter: "g", note: "Gb3", type: "black" },
+  { letter: "b", note: "G3", type: "white" },
+  { letter: "h", note: "Ab3", type: "black" },
+  { letter: "n", note: "A3", type: "white" },
+  { letter: "j", note: "Bb3", type: "black" },
+  { letter: "m", note: "B3", type: "white" },
   { letter: "q", note: "C4", type: "white" },
   { letter: "2", note: "Db4", type: "black" },
   { letter: "w", note: "D4", type: "white" },
@@ -31,7 +46,7 @@ export const pianoKeys: PianoKeyData[] = [
   { letter: "i", note: "C5", type: "white" },
 ];
 
-// Avstånd från en vit tangents vänsterkant till nästas.
+// Distance from one white key's left edge to the next one's.
 const whitePitch = KEY_SIZE.white.width + KEY_GAP;
 
 const whiteKeyCount = pianoKeys.filter((key) => key.type === "white").length;
@@ -42,8 +57,8 @@ export const keyboardHeight = KEY_SIZE.white.height;
 
 export type PositionedKey = PianoKeyData & { offset: number };
 
-// Alla tangenter placeras absolut från samma vänsterkant: de vita på rad,
-// de svarta centrerade över skarven mellan de vita omkring dem.
+// Every key is positioned absolutely from the same left edge: white keys in
+// a row, black keys centred over the seam between the white keys around them.
 function positionKeys(): PositionedKey[] {
   const positioned: PositionedKey[] = [];
   let whiteKeysBefore = 0;
